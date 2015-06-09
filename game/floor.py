@@ -6,25 +6,18 @@ from cocos.sprite import Sprite
 from game.resources import resources
 from random import randint
 
-class Pipe(Sprite):
+class Floor(Sprite):
 
 	def __init__(
-			self,
-			mode,			
-			position = (600, 50),
+			self,				
+			position = (0, 0),
 			velocity = (-90, 0),
 			speed = 50,
 			*args,
 			**kwargs):
 		kwargs['position'] = position
 		
-		#self.position = position
-		self.score = 0
-		self.mode = mode
-		if self.mode == 1:
-			super(Pipe, self).__init__(resources.pipe, *args, **kwargs)
-		else:
-			super(Pipe, self).__init__(resources.pipe1, *args, **kwargs)
+		super(Floor, self).__init__(resources.floor, *args, **kwargs)
 		self.speed = speed
 		self.velocity = velocity
 		self.do(Move())
@@ -33,11 +26,9 @@ class Pipe(Sprite):
 
 	def update(self, dt):
 		self.cshape.center = self.position
-		if self.position[0] < 200:
-			self.score += 1
+		if self.position[0] <= -308:
+			self.position = 1231, 0
 		
 
 		
 		
-
-

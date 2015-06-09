@@ -3,6 +3,7 @@ import pyglet
 from game import flappy
 from game import utils
 from game import pipe
+from game import floor as f
 from game.resources import resources
 from pyglet.window import key
 from random import randint
@@ -23,13 +24,17 @@ class Game(cocos.layer.ColorLayer):
             font_size = 30,
             anchor_x = 'center', anchor_y = 'center',
             position = (50, 450),
-            color = (255,0,255,255)
+            color = (0,0,0,255)
             )
-        self.add(self.label,z=2)
+        self.add(self.label,z=1)
 
         self.batch = cocos.batch.BatchNode()
         self.create_pipes()
-        self.add(self.batch, z=1)
+        self.add(self.batch)
+
+        self.batch1 = cocos.batch.BatchNode()
+        self.create_floor()
+        self.add(self.batch1, z=1)
         self.schedule(self.update)
         
     def create_pipes(self):
@@ -50,16 +55,49 @@ class Game(cocos.layer.ColorLayer):
 
             self.collision_manager.add(pip[0])
             self.collision_manager.add(pip[1])
+    def create_floor(self):
+
+        positions = ((0,0),(308,0),(616,0),(924,0),(1232,0))
+        self.floor =[f.Floor() for i in range(5)]
+
+        for i, flor in enumerate(self.floor):
+            flor.position = positions[i]
+            self.batch1.add(flor)
+            self.collision_manager.add(flor)
+
 
             
 
     def update(self, dt):
+        tmp = False
         for obstacle in self.pipes:
+            
             if obstacle[0].position[0] < 0:
                 y = -randint(0,200)
                 obstacle[0].position = 1000, y
                 obstacle[1].position = 1000, y + 570
+                
+
+            if 69.75 < self.flapy.position[0] - obstacle[0].position[0] <= 70:
+                print(self.flapy.position[0] - obstacle[0].position[0])
+                self.score += 1
+                self.remove(self.label)
+                self.label = cocos.text.Label('{0}'.format(self.score),
+                font_name = 'Times New Roman',
+                font_size = 30,
+                anchor_x = 'center', anchor_y = 'center',
+                position = (50, 450),
+                color = (0,0,0,255)
+                )
+                self.add(self.label)
+        
+
+
+
+            
         collisions = self.collision_manager.objs_colliding(self.flapy)
+
+
         if collisions:
             print("zadet")
             scene = cocos.scene.Scene()
@@ -75,17 +113,7 @@ class Game(cocos.layer.ColorLayer):
     def on_key_press(self, symbol, modifires):
         if symbol == key.UP:
             self.flapy.jump()
-            self.score += 1
-            self.remove(self.label)
-            self.label = cocos.text.Label('{0}'.format(self.score),
-            font_name = 'Times New Roman',
-            font_size = 30,
-            anchor_x = 'center', anchor_y = 'center',
-            position = (50, 450),
-            color = (255,0,255,255)
-            )
-        self.add(self.label)
-
+            
 class MainMenu(cocos.menu.Menu):
     def __init__(self):
         super(MainMenu, self).__init__()
@@ -114,6 +142,30 @@ class MainMenu(cocos.menu.Menu):
 
     def on_quit(self):
         pyglet.app.exit()
+
+class OptionsMenu(cocos.menu.Menu):
+    def __init__(self):
+        super(OptionsMenu, self).__init__("two_runner")
+
+        self.font_title["font_name"] = "Edit Undo Line BRK"
+        self.font_title["font_size"] = 52
+        self.font_title["color"] = (240, 0, 220, 255)
+
+        self.font_item["color"] = (255, 255, 255, 255)
+        self.font_item_selected["color"] = (240, 0, 220, 255)
+
+        items = []
+        items.append(cocos.menu.MenuItem("Fullscreen", self.on_fullscreen))
+        items.append(cocos.menu.MenuItem("Back", self.on_quit))
+        self.create_menu(items, cocos.menu.shake(), cocos.menu.shake_back())
+
+    def on_fullscreen(self):
+        cocos.director.director.window.set_fullscreen(
+            not cocos.director.director.window.fullscreen
+        )
+
+    def on_quit(self):
+        self.parent.switch_to(0)
 
 class YouLostMenu(cocos.menu.Menu):
     def __init__(self):
@@ -151,9 +203,10 @@ class YouLostMenu(cocos.menu.Menu):
         cocos.director.director.run(scene)
 
 if __name__ == '__main__':
-    cocos.director.director.init(width=800, height=500)
+    cocos.director.director.init(width=800, height=500, vsync = True)
+    cocos.director.director.show_FPS = True
     cocos.director.director.window.push_handlers(utils.keys)
     scene = cocos.scene.Scene()
-    scene.add(cocos.layer.MultiplexLayer(MainMenu()), z=1)
+    scene.add(cocos.layer.MultiplexLayer(MainMenu(), OptionsMenu()), z=1)
     #scene.add(BackgroundLayer(), z=0)
     cocos.director.director.run(scene)

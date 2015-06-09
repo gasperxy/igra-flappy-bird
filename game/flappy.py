@@ -13,8 +13,8 @@ class Flappy(Sprite):
     def __init__(self,
                  position = (200, 200),
                  velocity = (0, 0), 
-                 speed = 120,    
-                 gravity = -200,
+                 speed = 150,    
+                 gravity = -300,
                  *args,
                  **kwargs):
         kwargs['position'] = position
@@ -28,7 +28,7 @@ class Flappy(Sprite):
         self.schedule(self.update)
 
     def update(self, dt):
-        width, height = director.get_window_size()
+        
         self.cshape.center = self.position
         
     def jump(self):
