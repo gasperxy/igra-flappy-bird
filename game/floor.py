@@ -21,7 +21,7 @@ class Floor(Sprite):
 		self.speed = speed
 		self.velocity = velocity
 		self.do(Move())
-		self.schedule(self.update) #vsak 'frame' pokliče funkcijo self.update
+		self.schedule_interval(self.update,1/60) #vsak 'frame' pokliče funkcijo self.update
 		self.cshape = AARectShape(self.position, self.width//2, self.height//2)
 
 	def update(self, dt):

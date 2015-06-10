@@ -13,7 +13,7 @@ class Flappy(Sprite):
     def __init__(self,
                  position = (200, 200),
                  velocity = (0, 0), 
-                 speed = 150,    
+                 speed = 170,    
                  gravity = -300,
                  *args,
                  **kwargs):
@@ -25,7 +25,7 @@ class Flappy(Sprite):
         self.speed = speed #velikost hitrosti
         self.velocity = velocity #vektor hitrosti
         self.do(Move())
-        self.schedule(self.update)
+        self.schedule_interval(self.update,1/60)
 
     def update(self, dt):
         
