@@ -12,7 +12,7 @@ class Pipe(Sprite):
 			self,
 			mode,			
 			position = (600, 50),
-			velocity = (-90, 0),
+			velocity = (-150, 0),
 			speed = 50,
 			*args,
 			**kwargs):

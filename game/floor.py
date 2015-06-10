@@ -11,7 +11,7 @@ class Floor(Sprite):
 	def __init__(
 			self,				
 			position = (0, 0),
-			velocity = (-90, 0),
+			velocity = (-150, 0),
 			speed = 50,
 			*args,
 			**kwargs):

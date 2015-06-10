@@ -27,6 +27,7 @@ class Game(cocos.layer.ColorLayer):
             color = (0,0,0,255)
             )
         self.add(self.label,z=1)
+        self.add(BackgroundLayer(), z=0)
 
         self.batch = cocos.batch.BatchNode()
         self.create_pipes()
@@ -69,11 +70,10 @@ class Game(cocos.layer.ColorLayer):
             
 
     def update(self, dt):
-        tmp = False
-        for obstacle in self.pipes:
-            
+        
+        for obstacle in self.pipes:            
             if obstacle[0].position[0] < 0:
-                y = -randint(0,200)
+                y = -randint(-100,200)
                 obstacle[0].position = 1000, y
                 obstacle[1].position = 1000, y + 570
                 
@@ -134,9 +134,13 @@ class MainMenu(cocos.menu.Menu):
         self.create_menu(items, cocos.menu.shake(), cocos.menu.shake_back())
 
     def on_new_game(self):
-        game_layer = Game()
-        game_scene = cocos.scene.Scene(game_layer)
-        cocos.director.director.push(game_scene)
+        # game_layer = Game()
+        # game_scene = cocos.scene.Scene(game_layer)
+        # cocos.director.director.push(game_scene)
+        scene = cocos.scene.Scene()
+        scene.add(cocos.layer.MultiplexLayer(Game(),BackgroundLayer()), z=1)
+        scene.add(BackgroundLayer(), z=0)       
+        cocos.director.director.run(scene)
     def on_options(self):
         self.parent.switch_to(1)
 
@@ -193,7 +197,8 @@ class YouLostMenu(cocos.menu.Menu):
 
     def on_new_game(self):
         scene = cocos.scene.Scene()
-        scene.add(cocos.layer.MultiplexLayer(Game()), z=1)       
+        scene.add(cocos.layer.MultiplexLayer(Game()), z=1)
+        scene.add(BackgroundLayer(), z=0)       
         cocos.director.director.run(scene)
 
     def on_main_menu(self):
@@ -202,11 +207,22 @@ class YouLostMenu(cocos.menu.Menu):
         scene.add(BackgroundLayer(), z=0)
         cocos.director.director.run(scene)
 
+class BackgroundLayer(cocos.layer.Layer):
+    def __init__(self):
+        super(BackgroundLayer, self).__init__()
+
+        self.image = cocos.sprite.Sprite(resources.bg)
+        self.image.position = 400, 250
+        self.add(self.image, z=0)
+
+      
+
+
 if __name__ == '__main__':
-    cocos.director.director.init(width=800, height=500, vsync = True)
+    cocos.director.director.init(width=800, height=500, vsync = False)
     cocos.director.director.show_FPS = True
     cocos.director.director.window.push_handlers(utils.keys)
     scene = cocos.scene.Scene()
     scene.add(cocos.layer.MultiplexLayer(MainMenu(), OptionsMenu()), z=1)
-    #scene.add(BackgroundLayer(), z=0)
+    scene.add(BackgroundLayer(), z=0)
     cocos.director.director.run(scene)
