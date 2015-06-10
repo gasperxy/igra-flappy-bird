@@ -48,7 +48,7 @@ class Game(cocos.layer.ColorLayer):
         positions = []
         x = 800
         for i in range(4):
-            y = randint(-100, 120)
+            y = randint(-100, 100)
             positions.append(((x, y), (x, 550 + y)))
             x += 250
 
@@ -88,7 +88,7 @@ class Game(cocos.layer.ColorLayer):
             new_pipe = pipe.Pipe(1)
             new_pipe1 = pipe.Pipe(2)
 
-            y = randint(-100, 150)
+            y = randint(-100, 100)
             new_pipe.position = 1000, y
             new_pipe1.position = 1000, y + 550
 
@@ -101,6 +101,7 @@ class Game(cocos.layer.ColorLayer):
             self.mimo = False
 
             self.pipes.append((new_pipe, new_pipe1))
+
         if first_pipe.position[0] < self.flapy.position[0] and not self.mimo:
             self.score += 1
             self.mimo = True
@@ -115,28 +116,7 @@ class Game(cocos.layer.ColorLayer):
             self.add(self.label)
 
 
-
-
-   ######################################     
-        # for obstacle in self.pipes:            
-        #     if obstacle[0].position[0] < 0:
-        #         y = randint(-100,150)
-        #         print(y)
-        #         obstacle[0].position = 1000, y
-        #         obstacle[1].position = 1000, y + 550                
-
-        #     if 65.5 < self.flapy.position[0] - obstacle[0].position[0] <= 70:
-        #         print(self.flapy.position[0] - obstacle[0].position[0])
-        #         self.score += 1
-        #         self.remove(self.label)
-        #         self.label = cocos.text.Label('{0}'.format(self.score),
-        #         font_name = 'Times New Roman',
-        #         font_size = 30,
-        #         anchor_x = 'center', anchor_y = 'center',
-        #         position = (50, 450),
-        #         color = (0,0,0,255)
-        #         )
-        #         self.add(self.label)
+   
 
         collisions = self.collision_manager.objs_colliding(self.flapy)
 
@@ -253,7 +233,7 @@ class BackgroundLayer(cocos.layer.Layer):
 
 
 if __name__ == '__main__':
-    cocos.director.director.init(width=800, height=500)
+    cocos.director.director.init(width=800, height=500, vsync = True)
     cocos.director.director.show_FPS = True
    
     cocos.director.director.window.push_handlers(utils.keys)

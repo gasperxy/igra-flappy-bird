@@ -27,7 +27,7 @@ class Floor(Sprite):
 	def update(self, dt):
 		self.cshape.center = self.position
 		if self.position[0] <= -308:
-			self.position = 1231, 0
+			self.position = 1225, 0
 		
 
 		

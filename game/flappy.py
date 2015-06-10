@@ -14,7 +14,7 @@ class Flappy(Sprite):
                  position = (200, 200),
                  velocity = (0, 0), 
                  speed = 170,    
-                 gravity = -300,
+                 gravity = -350,
                  *args,
                  **kwargs):
         kwargs['position'] = position
